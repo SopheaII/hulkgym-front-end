@@ -1,31 +1,38 @@
 import { useEffect, useState } from "react";
-import HomePage from "./pages/homePage/homPage";
+import { Router, RouterProvider } from "react-router-dom";
+import appRoutes from "./routes/appRoutes";
+import axios from "axios";
+import api from './service/api'
 
 const App = () => {
-  const [testData, setData] = useState("")
-  const [photo, setUserInfo] = useState("")
+
   const initData = window.Telegram.WebApp.initData;
   const userInfo = window.Telegram.WebApp.initDataUnsafe?.user;
 
-  useEffect(() => {
-    setUserInfo(userInfo.photo_url)
+  const [loading, setLoading] = useState(true);
 
-  }, [])
+  useEffect(() => {
+    setLoading(true);
+
+    const login = async () => {
+      await handleSendRequest();
+    };
+    login();
+  }, []);
 
   const handleSendRequest = async () => {
     if (window.Telegram?.WebApp) {
-
       try {
-        const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/auth/validate`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ initData, userInfo }),
-        });
-        const data = await response.json();
-        console.log("Backend response:", data);
-        setData(data.message)
+
+        await api.signin({ initData, userInfo })
+        .then( data => {
+          console.log("Backend response:", data);
+          setLoading(false);
+        })
+        .catch(error => {
+          console.log(error);
+        })
+  
       } catch (error) {
         console.error("Error:", error);
       }
@@ -33,20 +40,20 @@ const App = () => {
       console.error("Telegram WebApp not available.");
     }
   };
+  
 
   return (
-    // <><button onClick={handleSendRequest}>
-    //   Send Telegram Data to Backend
-    // </button>
-    // <p>
-    //     test: {testData}
-    //   </p>
-    //   <img src={photo} alt="User Profile Photo"/>
-
-    // </>
-    <HomePage/>
+    <>
+      {loading ? (
+        <div className="flex items-center justify-center h-screen w-screen bg-white text-black" style={{ textAlign: "center" }}>
+          Loading...
+        </div>
+      ) : (
+          <RouterProvider router={appRoutes} />
+      )}
+      {/* <RouterProvider router={appRoutes} /> */}
+   </>
   );
 };
 
 export default App;
-
