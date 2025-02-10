@@ -13,7 +13,6 @@ type ActivityResponse = {
 };
 
 const HomePage: React.FC = () => {
-  const initData = window.Telegram?.WebApp?.initData;
   const telegramUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
   const [userInfo, setUserInfo] = useState<UserType>({
     id: "123",
@@ -21,7 +20,6 @@ const HomePage: React.FC = () => {
     first_name: "first_name",
     last_name: "last_name",
   });
-  const [loading, setLoading] = useState("Not fetch");
   const [activity, setActivity] = useState<ActivityResponse[]>([]);
 
   useEffect(() => {
@@ -45,7 +43,6 @@ const HomePage: React.FC = () => {
           setActivity(result);
         })
         .catch((error) => {
-          setLoading(error);
           console.log(error);
         });
     } catch (error) {
@@ -55,7 +52,6 @@ const HomePage: React.FC = () => {
 
   return (
     <div className=" bg-gray-50 text-gray-900 px-4 pb-20">
-      <div>{loading}</div>
       {/* Header */}
       <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-3">
@@ -159,41 +155,6 @@ const HomePage: React.FC = () => {
               </div>
             </div>
             ))}
-          {/* Push-ups */}
-
-          {/* Squats */}
-          {/* <div className="bg-white rounded-xl p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">💪</span>
-                  <div>
-                    <h3 className="font-medium">Squats</h3>
-                    <p className="text-sm text-gray-500">Sets: 4, 15 reps/set</p>
-                  </div>
-                </div>
-                <span className="font-semibold">25</span>
-              </div>
-              <div className="w-full bg-gray-100 rounded-full h-1.5">
-                <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '80%' }}></div>
-              </div>
-            </div> */}
-
-          {/* Lunges */}
-          {/* <div className="bg-white rounded-xl p-4 shadow-sm">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🏃</span>
-                  <div>
-                    <h3 className="font-medium">Lunges</h3>
-                    <p className="text-sm text-gray-500">Sets: 3, 12 reps/set</p>
-                  </div>
-                </div>
-                <span className="font-semibold">15</span>
-              </div>
-              <div className="w-full bg-gray-100 rounded-full h-1.5">
-                <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: '40%' }}></div>
-              </div>
-            </div> */}
         </div>
       </div>
 
